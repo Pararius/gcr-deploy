@@ -1,0 +1,27 @@
+name: 'GCR Deploy'
+description: 'Deploy a Docker image to Google Container Registry (GCR)'
+inputs:
+  host:
+    description: 'Hostname of the registry'
+    required: true
+    default: 'gcr.io'
+  project:
+    description: 'Name of the Google Cloud Platform project where your registry resides (example: foobar-191284)'
+    required: true
+  image:
+    description: 'Name of the Docker image to push'
+    required: true
+  tag:
+    description: 'Tag of the Docker image to push'
+    required: true
+  tag-as-latest:
+    description: 'Whether or not to tag the pushed image with the "latest" tag'
+    required: false
+    default: 'false'
+  force:
+    description: 'Whether to do a forced push (push even if the image already exists)'
+    required: false
+    default: 'false'
+runs:
+  using: 'node12'
+  main: 'dist/index.js'
