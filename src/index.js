@@ -18,7 +18,7 @@ async function run() {
 
     if (tagLatest) {
       await exec.exec('gcloud', [
-        'container', 'images', 'add-tag',
+        'container', 'images', 'add-tag', '--quiet',
         `${gcrHost}/${gcpProject}/${dockerImage}:${imageTag}`,
         `${gcrHost}/${gcpProject}/${dockerImage}:latest`
       ]);
