@@ -5,7 +5,7 @@ This action pushes a Docker image to Google Container Registry (GCR).
 ## Prerequisites
 
 This action assumes you are already logged in to your Google Cloud environment.
-For an example on how to achieve this
+For an example on how to achieve this, check the [Full workflow example](#full-workflow-example) below.
 
 ## Inputs
 
