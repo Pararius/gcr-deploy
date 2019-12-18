@@ -72,8 +72,13 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      # Store the short commit hash (first 7 characters) as environment variable
+      - name: Set short commit hash
+        run: echo ::set-env name=SHORT_TAG::$(echo ${GITHUB_SHA::7})
+
       # Login to Google Cloud using a service account.
-      # The JSON key for this service account is stored as a base64 encoded string in the GCLOUD_AUTH secret.
+      # The JSON key for this service account is stored as a base64 encoded string
+      #   in the GCLOUD_AUTH secret.
       - name: Login to Google Cloud
         env:
           GCLOUD_AUTH: ${{ secrets.GCLOUD_AUTH }}
@@ -84,7 +89,7 @@ jobs:
 
       - name: Build Docker image (use short commit hash as tag)
         run: |
-          docker build -t eu.gcr.io/my-node-project/node:${GITHUB_SHA::8} \
+          docker build -t eu.gcr.io/my-node-project/node:${{ env.SHORT_TAG }} \
             --cache-from eu.gcr.io/my-node-project/node:latest
             .
 
@@ -93,8 +98,8 @@ jobs:
           host: eu.gcr.io
           project: my-node-project
           image: node
-          tag: ${GITHUB_SHA::8}
-          tag-as-latest: 'true'
+          tag: ${{ env.SHORT_TAG }}
+          tag-as-latest: true
 ```
 
 This workflow will run whenever a PR against the `master` branch is closed and merged.
