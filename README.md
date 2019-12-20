@@ -27,7 +27,19 @@ For an example on how to achieve this, check the [Full workflow example](#full-w
 
 ### `tag-as-latest`
 
-Whether or not to tag the pushed image with the "latest" tag. Default `'false'`
+Whether or not to tag the pushed image with the "latest" tag.
+Uses the value of the `latest-tag` option.
+Default `'false'`.
+
+### `digest-check`
+
+Whether or not to compare the digests of the locally built Docker image with the "latest" remote image.
+Uses the value of the `latest-tag` option.
+Default `true`
+
+### `latest-tag`
+
+The name of the tag used to mark an image as "latest". Default `latest`.
 
 ## Example usage
 
