@@ -18,10 +18,14 @@ inputs:
     description: 'Whether or not to tag the pushed image with the "latest" tag'
     required: false
     default: 'false'
-  force:
-    description: 'Whether to do a forced push (push even if the image already exists)'
+  digest-check:
+    description: 'Whether or not to compare the digests of the locally built Docker image with the "latest" remote image.'
     required: false
-    default: 'false'
+    default: 'true'
+  latest-tag:
+    description: 'The name of the tag used to mark an image as "latest".'
+    required: false
+    default: 'latest'
 runs:
   using: 'node12'
   main: 'dist/index.js'
