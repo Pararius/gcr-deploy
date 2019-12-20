@@ -998,7 +998,7 @@ async function run() {
     const gcpProject = core.getInput('project', {required: true});
     const dockerImage = core.getInput('image', {required: true});
     const imageTag = core.getInput('tag', {required: true});
-    let tagAsLatest = core.getIGUnput('tag-as-latest');
+    let tagAsLatest = core.getInput('tag-as-latest');
     let digestCheck = core.getInput('digest-check');
     let latestTag = core.getInput('latest-tag');
 
