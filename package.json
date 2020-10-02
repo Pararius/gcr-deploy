@@ -19,7 +19,7 @@
   "description": "GitHub Action that pushes a Docker image to Google Container Registry (GCR).",
   "dependencies": {
     "@actions/core": "^1.2.0",
-    "@actions/exec": "^1.0.1"
+    "@actions/exec": "^1.0.4"
   },
   "devDependencies": {
     "@zeit/ncc": "^0.20.5"
