@@ -24,20 +24,23 @@ async function run() {
   }
 
   const taggedImage = `${image}:${imageTag}`;
+  const latestImage = `${image}:${latestTag}`;
 
   // Push the image
   await exec.exec('docker', ['push', taggedImage]);
 
+  let msg = `Pushed image ${taggedImage}`;
+
   if (tagAsLatest) {
     // Tag image as latest
     await exec.exec('gcloud', [
-      'container', 'images', 'add-tag', '--quiet',
-      `${gcrHost}/${gcpProject}/${dockerImage}:${imageTag}`,
-      `${gcrHost}/${gcpProject}/${dockerImage}:${latestTag}`
+      'container', 'images', 'add-tag', '--quiet', taggedImage, latestImage
     ]);
+
+    msg += ' and tagged as latest';
   }
 
-  return `Pushed image ${taggedImage}`;
+  return msg;
 }
 
 run()
