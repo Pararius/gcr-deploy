@@ -1,10 +1,9 @@
 {
   "name": "gcr-deploy",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "scripts": {
-    "package": "ncc build src/index.js -o dist"
-  },
+  "author": "Pararius",
+  "license": "ISC",
+  "description": "GitHub Action that pushes a Docker image to Google Container Registry (GCR).",
+  "version": "1.2.0",
   "keywords": [
     "GitHub",
     "Actions",
@@ -14,14 +13,17 @@
     "Container",
     "Registry"
   ],
-  "author": "Pararius",
-  "license": "ISC",
-  "description": "GitHub Action that pushes a Docker image to Google Container Registry (GCR).",
   "dependencies": {
     "@actions/core": "^1.2.0",
     "@actions/exec": "^1.0.1"
   },
   "devDependencies": {
-    "@zeit/ncc": "^0.20.5"
-  }
+    "@vercel/ncc": "^0.26.2",
+    "eslint": "^7.17.0"
+  },
+  "scripts": {
+    "lint": "eslint .",
+    "build": "ncc build src/index.js -o dist"
+  },
+  "main": "dist/index.js"
 }
