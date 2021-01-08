@@ -3,48 +3,49 @@ const exec = require('@actions/exec');
 const digest = require('./digest');
 
 async function run() {
-  try {
-    // Get the inputs
-    const gcrHost = core.getInput('host', {required: true});
-    const gcpProject = core.getInput('project', {required: true});
-    const dockerImage = core.getInput('image', {required: true});
-    const imageTag = core.getInput('tag', {required: true});
-    let tagAsLatest = core.getInput('tag-as-latest');
-    let digestCheck = core.getInput('digest-check');
-    let latestTag = core.getInput('latest-tag');
+  const
+    gcrHost = core.getInput('host', {required: true}),
+    gcpProject = core.getInput('project', {required: true}),
+    dockerImage = core.getInput('image', {required: true}),
+    imageTag = core.getInput('tag', {required: true}),
+    tagAsLatest = (core.getInput('tag-as-latest') || 'false') === 'true',
+    digestCheck = (core.getInput('digest-check') || 'true') === 'true',
+    latestTag = core.getInput('latest-tag') || 'latest'
+  ;
 
-    // Set defaults
-    if (String(tagAsLatest) === '') { tagAsLatest = false; }
-    if (String(digestCheck) === '') { digestCheck = true; }
-    if (String(latestTag) === '') { latestTag = 'latest'; }
+  const image = `${gcrHost}/${gcpProject}/${dockerImage}`;
 
-    if (String(digestCheck) === 'true') {
-      // Check for Docker image digest match
-      await digest.check(gcrHost, gcpProject, dockerImage, imageTag, latestTag).then(function (result) {
-        if (result) {
-          console.log('Local and remote digests match. Not pushing image.');
-          process.exit();
-        }
-      });
+  if (digestCheck) {
+    const match = await digest.match(image, imageTag, latestTag);
+
+    if (match) {
+      return 'Local and remote digests match. Not pushing image.';
     }
-
-    // Push the image
-    await exec.exec('docker', [
-      'push',
-      `${gcrHost}/${gcpProject}/${dockerImage}:${imageTag}`
-    ]);
-
-    if (String(tagAsLatest) === 'true') {
-      // Tag image as latest
-      await exec.exec('gcloud', [
-        'container', 'images', 'add-tag', '--quiet',
-        `${gcrHost}/${gcpProject}/${dockerImage}:${imageTag}`,
-        `${gcrHost}/${gcpProject}/${dockerImage}:${latestTag}`
-      ]);
-    }
-  } catch (error) {
-    core.setFailed(error.message);
   }
+
+  const taggedImage = `${image}:${imageTag}`;
+
+  // Push the image
+  await exec.exec('docker', ['push', taggedImage]);
+
+  if (tagAsLatest) {
+    // Tag image as latest
+    await exec.exec('gcloud', [
+      'container', 'images', 'add-tag', '--quiet',
+      `${gcrHost}/${gcpProject}/${dockerImage}:${imageTag}`,
+      `${gcrHost}/${gcpProject}/${dockerImage}:${latestTag}`
+    ]);
+  }
+
+  return `Pushed image ${taggedImage}`;
 }
 
-run();
+run()
+  .then(
+    msg => core.info(msg)
+  )
+  .catch(err => {
+    core.error(err);
+    core.setFailed(err.message);
+  })
+;
