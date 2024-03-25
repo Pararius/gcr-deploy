@@ -1,5 +1,7 @@
 # GCR Deploy for GitHub Actions
 
+⚠️ **This project is archived and no longer maintained. Recommended alternative: https://github.com/docker/build-push-action** ⚠️
+
 This action pushes a Docker image to Google Container Registry (GCR).
 
 ## Prerequisites
